@@ -111,6 +111,29 @@ resource "civo_firewall" "this" {
 # Sveltos
 #
 
+resource "kubernetes_namespace" "sveltos_cluster_namespace" {
+  metadata {
+    name = var.cluster_name
+  }
+}
+
+resource "kubernetes_secret" "sveltos_cluster_secret" {
+  depends_on = [ civo_kubernetes_cluster.this ]
+  
+  metadata {
+    name = "${var.cluster_name}-kubeconfig"
+  }
+
+  data = {
+    kubeconfig    = base64encode(locals.kubeconfig)
+    re-kubeconfig = base64encode(locals.kubeconfig)
+  }
+
+  type = "Opaque"
+}
+
+
+
 # data "template_file" "sveltos_cluster" {
 #   template = file("${path.module}/sveltos-cluster.yaml.tpl")
 
@@ -121,23 +144,9 @@ resource "civo_firewall" "this" {
 #     }
 # }
 
-# data "kubectl_file_documents" "sveltos_cluster_file" {
-#   content = data.template_file.sveltos_cluster.rendered
-# }
-
-# resource "kubectl_manifest" "sveltos_cluster" {
-#   depends_on = [ civo_kubernetes_cluster.this ]
-
-#   for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
-#   yaml_body = each.value
-# }
-
-###
-
 data "kubectl_file_documents" "sveltos_cluster_file" {
-  depends_on = [ civo_kubernetes_cluster.this ]
-
   content = local.sveltos_cluster_yaml
+  # content = data.template_file.sveltos_cluster.rendered
 }
 
 resource "kubectl_manifest" "sveltos_cluster" {
@@ -147,21 +156,32 @@ resource "kubectl_manifest" "sveltos_cluster" {
   yaml_body = each.value
 }
 
+###
+
+# data "kubectl_file_documents" "sveltos_cluster_file" {
+#   depends_on = [ civo_kubernetes_cluster.this ]
+
+#   content = local.sveltos_cluster_yaml
+# }
+
+# resource "kubectl_manifest" "sveltos_cluster" {
+#   depends_on = [ civo_kubernetes_cluster.this ]
+
+#   for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
+#   yaml_body = each.value
+# }
+
 
 #
 # Walrus information
 #
 
 locals {
-  context    = var.context
-
+  context                 = var.context
   walrus_environment_name = try(local.context["environment"]["name"], null)
-
-  kubeconfig = civo_kubernetes_cluster.this.kubeconfig
+  kubeconfig              = civo_kubernetes_cluster.this.kubeconfig
 
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
     labels       = var.sveltos_labels
-    cluster_name = var.cluster_name,
-    kubeconfig   = local.kubeconfig
   })
 }
