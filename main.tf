@@ -134,6 +134,8 @@ data "kubectl_file_documents" "sveltos_cluster_file" {
 }
 
 resource "kubectl_manifest" "sveltos_cluster" {
+  depends_on = [ civo_kubernetes_cluster ]
+
   for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
   yaml_body = each.value
 }
