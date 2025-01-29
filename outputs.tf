@@ -1,5 +1,19 @@
 #
-# Contextual output
+# Cluster output
+#
+
+output "cluster_id" {
+  description = "The ID of the Kubernetes cluster"
+  value       = civo_kubernetes_cluster.this.id
+}
+
+output "cluster_kubeconfig" {
+  description = "The kubeconfig for the Kubernetes cluster"
+  value       = civo_kubernetes_cluster.this.kubeconfig
+}
+
+#
+# Walrus Contextual Output
 #
 
 output "walrus_project_name" {
@@ -30,13 +44,4 @@ output "walrus_resource_name" {
 output "walrus_resource_id" {
   value       = try(local.context["resource"]["id"], null)
   description = "The id of resource where deployed in Walrus."
-}
-
-#
-# Submodule output
-#
-
-output "submodule" {
-  value       = module.submodule.message
-  description = "The message from submodule."
 }
