@@ -144,17 +144,17 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
 #     }
 # }
 
-data "kubectl_file_documents" "sveltos_cluster_file" {
-  content = local.sveltos_cluster_yaml
-  # content = data.template_file.sveltos_cluster.rendered
-}
+# data "kubectl_file_documents" "sveltos_cluster_file" {
+#   content = local.sveltos_cluster_yaml
+#   # content = data.template_file.sveltos_cluster.rendered
+# }
 
-resource "kubectl_manifest" "sveltos_cluster" {
-  depends_on = [ civo_kubernetes_cluster.this ]
+# resource "kubectl_manifest" "sveltos_cluster" {
+#   depends_on = [ civo_kubernetes_cluster.this ]
 
-  for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
-  yaml_body = each.value
-}
+#   for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
+#   yaml_body = each.value
+# }
 
 ###
 
@@ -181,7 +181,7 @@ locals {
   walrus_environment_name = try(local.context["environment"]["name"], null)
   kubeconfig              = civo_kubernetes_cluster.this.kubeconfig
 
-  sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
-    labels       = var.sveltos_labels
-  })
+  # sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
+  #   labels       = var.sveltos_labels
+  # })
 }
