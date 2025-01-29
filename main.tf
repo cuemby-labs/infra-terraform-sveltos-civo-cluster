@@ -129,6 +129,15 @@ resource "civo_firewall" "this" {
 #   content = data.template_file.sveltos_cluster.rendered
 # }
 
+# resource "kubectl_manifest" "sveltos_cluster" {
+#   depends_on = [ civo_kubernetes_cluster.this ]
+
+#   for_each  = data.kubectl_file_documents.sveltos_cluster_file.manifests
+#   yaml_body = each.value
+# }
+
+###
+
 data "kubectl_file_documents" "sveltos_cluster_file" {
   depends_on = [ civo_kubernetes_cluster.this ]
 
@@ -153,8 +162,8 @@ locals {
 }
 locals {
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
-    labels       = var.sveltos_labels,
-    cluster_name = var.cluster_name,
-    kubeconfig   = local.kubeconfig
+    labels       = var.sveltos_labels
+    # cluster_name = var.cluster_name,
+    # kubeconfig   = local.kubeconfig
   })
 }
