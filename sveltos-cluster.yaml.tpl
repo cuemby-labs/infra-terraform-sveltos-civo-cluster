@@ -10,9 +10,9 @@ metadata:
   namespace: ${cluster_name}
 data:
   kubeconfig: >-
-    ${kubeconfig}
+    kubeconfig
   re-kubeconfig: >-
-    ${kubeconfig}
+    kubeconfig
 type: Opaque
 ---
 apiVersion: lib.projectsveltos.io/v1beta1
