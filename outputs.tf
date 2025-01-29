@@ -7,10 +7,10 @@ output "cluster_id" {
   value       = civo_kubernetes_cluster.this.id
 }
 
-output "cluster_kubeconfig" {
-  description = "The kubeconfig for the Kubernetes cluster"
-  value       = civo_kubernetes_cluster.this.kubeconfig
-}
+# output "cluster_kubeconfig" {
+#   description = "The kubeconfig for the Kubernetes cluster"
+#   value       = civo_kubernetes_cluster.this.kubeconfig
+# }
 
 #
 # Walrus Contextual Output
