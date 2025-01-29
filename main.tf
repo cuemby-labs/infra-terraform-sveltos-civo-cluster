@@ -130,6 +130,8 @@ resource "civo_firewall" "this" {
 # }
 
 data "kubectl_file_documents" "sveltos_cluster_file" {
+  depends_on = [ civo_kubernetes_cluster.this ]
+
   content = local.sveltos_cluster_yaml
 }
 
