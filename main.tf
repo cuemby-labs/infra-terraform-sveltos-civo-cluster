@@ -12,10 +12,6 @@ resource "random_password" "random" {
 # Civo kubernetes cluster
 #
 
-locals {
-  walrus_environment_name = try(local.context["environment"]["name"], null)
-}
-
 resource "civo_kubernetes_cluster" "this" {
     name               = "${var.cluster_name}-${local.walrus_environment_name}-${random_password.random.result}"
     applications       = var.applications
@@ -158,12 +154,14 @@ resource "kubectl_manifest" "sveltos_cluster" {
 
 locals {
   context    = var.context
+
+  walrus_environment_name = try(local.context["environment"]["name"], null)
+
   kubeconfig = civo_kubernetes_cluster.this.kubeconfig
-}
-locals {
+
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
     labels       = var.sveltos_labels
-    # cluster_name = var.cluster_name,
-    # kubeconfig   = local.kubeconfig
+    cluster_name = var.cluster_name,
+    kubeconfig   = local.kubeconfig
   })
 }
