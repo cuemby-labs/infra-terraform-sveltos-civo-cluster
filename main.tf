@@ -125,8 +125,8 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   }
 
   data = {
-    kubeconfig    = base64encode(local.kubeconfig)
-    re-kubeconfig = base64encode(local.kubeconfig)
+    kubeconfig    = local.kubeconfig
+    re-kubeconfig = local.kubeconfig
   }
 
   type = "Opaque"
