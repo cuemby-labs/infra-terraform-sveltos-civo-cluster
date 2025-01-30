@@ -182,6 +182,7 @@ locals {
   kubeconfig              = civo_kubernetes_cluster.this.kubeconfig
 
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
-    labels       = var.sveltos_labels
+    labels       = var.sveltos_labels,
+    cluster_name = var.cluster_name
   })
 }
