@@ -121,12 +121,13 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   depends_on = [ civo_kubernetes_cluster.this ]
 
   metadata {
-    name = "${var.cluster_name}-kubeconfig"
+    name      = "${var.cluster_name}-sveltos-kubeconfig"
+    namespace = var.cluster_name
   }
 
   data = {
-    kubeconfig    = local.kubeconfig
-    re-kubeconfig = local.kubeconfig
+    kubeconfig    = base64encode(local.kubeconfig)
+    re-kubeconfig = base64encode(local.kubeconfig)
   }
 
   type = "Opaque"
