@@ -3,7 +3,7 @@
 #
 
 resource "random_password" "random" {
-  length  = 4
+  length  = 2
   special = false
   upper   = false
 }
@@ -116,10 +116,6 @@ resource "kubernetes_namespace" "sveltos_cluster_namespace" {
   }
 }
 
-locals {
-  kubeconfig = nonsensitive(civo_kubernetes_cluster.this.kubeconfig)
-}
-
 resource "local_file" "kubeconfig" {
   filename = "/tmp/${civo_kubernetes_cluster.this.name}-kubeconfig"  # Define the path and file name
   content  = civo_kubernetes_cluster.this.kubeconfig
@@ -134,7 +130,7 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   }
 
   data = {
-    kubeconfig    = local.kubeconfig
+    kubeconfig = local.kubeconfig
   }
 
   type = "Opaque"
@@ -189,7 +185,12 @@ locals {
   walrus_environment_name = try(local.context["environment"]["name"], null)
 
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
-    labels       = var.sveltos_labels,
-    cluster_name = var.cluster_name
+    labels             = var.sveltos_labels,
+    cluster_name       = var.cluster_name
+    kubernetes_version = var.kubernetes_version
   })
+
+  kubeconfig = nonsensitive(civo_kubernetes_cluster.this.kubeconfig)
+  version    = substr(var.kubernetes_version, 0, 6)
+
 }
