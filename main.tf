@@ -117,6 +117,10 @@ resource "kubernetes_namespace" "sveltos_cluster_namespace" {
   }
 }
 
+locals {
+  kubeconfig = nonsensitive(civo_kubernetes_cluster.this.kubeconfig)
+}
+
 resource "local_file" "kubeconfig" {
   filename = "/tmp/${civo_kubernetes_cluster.this.name}-kubeconfig"  # Define the path and file name
   content  = civo_kubernetes_cluster.this.kubeconfig
@@ -131,7 +135,7 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   }
 
   data = {
-    kubeconfig    = local_file.kubeconfig.content
+    kubeconfig    = local.kubeconfig
   }
 
   type = "Opaque"
