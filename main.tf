@@ -188,7 +188,6 @@ resource "kubectl_manifest" "sveltos_cluster" {
 locals {
   context                 = var.context
   walrus_environment_name = try(local.context["environment"]["name"], null)
-  kubeconfig              = civo_kubernetes_cluster.this.kubeconfig
 
   sveltos_cluster_yaml = templatefile("${path.module}/sveltos-cluster.yaml.tpl", {
     labels       = var.sveltos_labels,
