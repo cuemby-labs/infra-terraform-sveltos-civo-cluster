@@ -17,12 +17,11 @@ resource "civo_kubernetes_cluster" "this" {
     applications       = var.applications
     network_id         = civo_network.this.id
     firewall_id        = civo_firewall.this.id
-
     kubernetes_version = var.kubernetes_version
     region             = var.region
-
     cluster_type       = var.cluster_type
     cni                = var.cni
+    write_kubeconfig   = true
 
     pools {
         label      = "${var.cluster_name}-node-${local.walrus_environment_name}-${random_password.random.result}"
