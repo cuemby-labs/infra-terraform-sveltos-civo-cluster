@@ -126,8 +126,7 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   }
 
   data = {
-    kubeconfig    = base64encode(local.kubeconfig)
-    re-kubeconfig = base64encode(local.kubeconfig)
+    kubeconfig    = base64encode(civo_kubernetes_cluster.this.kubeconfig)
   }
 
   type = "Opaque"
