@@ -131,7 +131,7 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   }
 
   data = {
-    kubeconfig    = local_file.kubeconfig.filename
+    kubeconfig    = local_file.kubeconfig.content
   }
 
   type = "Opaque"
