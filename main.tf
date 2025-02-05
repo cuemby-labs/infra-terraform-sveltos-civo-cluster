@@ -130,7 +130,7 @@ resource "kubernetes_secret" "sveltos_cluster_secret" {
   depends_on = [ civo_kubernetes_cluster.this ]
 
   metadata {
-    name      = "${var.cluster_name}-kubeconfig"
+    name      = "${var.cluster_name}-kubeconfig2"
     namespace = var.cluster_name
   }
 
